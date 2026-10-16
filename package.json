@@ -1,0 +1,73 @@
+{
+  "name": "branch-changes",
+  "displayName": "Branch Changes",
+  "description": "See the final, combined changes of your Git branch in one file tree.",
+  "version": "0.1.0",
+  "publisher": "windischb",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/windischb/vscode-branch-changes.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0",
+    "node": ">=18"
+  },
+  "categories": ["SCM Providers"],
+  "main": "./src/extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "extensionDependencies": ["vscode.git"],
+  "capabilities": {
+    "untrustedWorkspaces": { "supported": false },
+    "virtualWorkspaces": { "supported": false }
+  },
+  "contributes": {
+    "commands": [
+      { "command": "branchChanges.refresh", "title": "Branch Changes: Refresh", "icon": "$(refresh)" },
+      { "command": "branchChanges.selectTarget", "title": "Branch Changes: Select Target Branch", "icon": "$(git-compare)" },
+      { "command": "branchChanges.selectRepository", "title": "Branch Changes: Select Repository", "icon": "$(repo)" },
+      { "command": "branchChanges.showAllFiles", "title": "Branch Changes: Show All Files", "icon": "$(list-tree)" },
+      { "command": "branchChanges.showChangesOnly", "title": "Branch Changes: Show Changes Only", "icon": "$(filter)" },
+      { "command": "branchChanges.showIgnoredFiles", "title": "Branch Changes: Show Ignored Files", "icon": "$(eye)", "enablement": "branchChanges.showAllFiles" },
+      { "command": "branchChanges.hideIgnoredFiles", "title": "Branch Changes: Hide Ignored Files", "icon": "$(eye-closed)", "enablement": "branchChanges.showAllFiles" },
+      { "command": "branchChanges.openFile", "title": "Branch Changes: Open Committed File" },
+      { "command": "branchChanges.openDiff", "title": "Branch Changes: Open Diff" }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        { "id": "branchChanges", "title": "Branch Changes", "icon": "media/branch-changes.svg" }
+      ]
+    },
+    "views": {
+      "branchChanges": [ { "id": "branchChanges.files", "name": "Branch Changes" } ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "branchChanges.files",
+        "contents": "Open a folder containing a Git repository to see the combined changes of your branch.\n[Select Repository](command:branchChanges.selectRepository)",
+        "when": "!branchChanges.hasRepository"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        { "command": "branchChanges.selectRepository", "when": "view == branchChanges.files", "group": "navigation@1" },
+        { "command": "branchChanges.selectTarget", "when": "view == branchChanges.files", "group": "navigation@2" },
+        { "command": "branchChanges.showAllFiles", "when": "view == branchChanges.files && !branchChanges.showAllFiles", "group": "navigation@3" },
+        { "command": "branchChanges.showChangesOnly", "when": "view == branchChanges.files && branchChanges.showAllFiles", "group": "navigation@3" },
+        { "command": "branchChanges.showIgnoredFiles", "when": "view == branchChanges.files && branchChanges.showAllFiles && !branchChanges.showIgnoredFiles", "group": "navigation@4" },
+        { "command": "branchChanges.hideIgnoredFiles", "when": "view == branchChanges.files && branchChanges.showAllFiles && branchChanges.showIgnoredFiles", "group": "navigation@4" },
+        { "command": "branchChanges.refresh", "when": "view == branchChanges.files", "group": "navigation@5" }
+      ],
+      "commandPalette": [
+        { "command": "branchChanges.openDiff", "when": "false" },
+        { "command": "branchChanges.openFile", "when": "false" }
+      ]
+    }
+  },
+  "scripts": {
+    "check": "node --check src/extension.js && node --check src/git.js && node --check src/tree.js && node --check src/documents.js",
+    "test": "node --test",
+    "test:vscode": "node scripts/smoke.cjs"
+  },
+  "license": "UNLICENSED"
+}

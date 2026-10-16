@@ -1,0 +1,8 @@
+**
+!package.json
+!README.md
+!src/extension.js
+!src/git.js
+!src/tree.js
+!src/documents.js
+!media/branch-changes.svg

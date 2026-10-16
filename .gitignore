@@ -1,0 +1,9 @@
+node_modules/
+*.vsix
+.DS_Store
+.alta/
+.env
+.env.*
+*.log
+.vscode/*
+!.vscode/launch.json
