@@ -1,112 +1,111 @@
 # Branch Changes
 
-Eine VS-Code-Erweiterung für **den Endstand deines gesamten Git-Branches** –
-wie der Dateibaum eines Pull Requests, direkt im Editor.
+A VS Code extension for **the final, combined changes of your entire Git branch** —
+like a pull request's file tree, right inside your editor.
 
-Wenn eine Datei in mehreren Commits geändert wurde, erscheint sie nur einmal mit
-dem kombinierten Ergebnis. Vollständig zurückgenommene Änderungen zählen nicht
-als Änderung. Eine Serveranbindung oder Anmeldung ist nicht nötig.
+If a file changes across multiple commits, it appears only once with the combined
+result. Fully reverted changes do not count as changes. No server connection or
+sign-in is required.
 
 ## Installation
 
-Voraussetzungen: VS Code ab 1.85, Git im `PATH`, die aktivierte eingebaute
-Git-Erweiterung und ein vertrauenswürdiger lokaler Workspace. Auf dem Zielrechner
-ist keine separate Node.js- oder npm-Installation erforderlich.
+Requirements: VS Code 1.85 or later, Git on your `PATH`, the enabled built-in Git
+extension, and a trusted local workspace. You do not need a separate Node.js or
+npm installation on the machine where you use the extension.
 
-1. Eine `.vsix`-Datei aus den [Releases](https://github.com/windischb/vscode-branch-changes/releases)
-   herunterladen, sofern bereits eine Release verfügbar ist. Alternativ das
-   Paket wie unten beschrieben selbst erstellen.
-2. In VS Code **Extensions → … → Install from VSIX…** auswählen und das Paket öffnen.
-3. Gegebenenfalls das VS-Code-Fenster neu laden.
+1. Download the `.vsix` file from the [latest release](https://github.com/windischb/vscode-branch-changes/releases/latest).
+   Alternatively, build the package yourself as described below.
+2. In VS Code, select **Extensions → … → Install from VSIX…** and open the package.
+3. Reload the VS Code window if prompted.
 
-Alternativ per Terminal:
+Or install from a terminal:
 
 ```sh
-code --install-extension branch-changes-0.1.0.vsix
+code --install-extension branch-changes-0.1.1.vsix
 ```
 
-Updates aus GitHub-Releases werden auf demselben Weg manuell installiert.
+Install updates from GitHub releases manually in the same way.
 
-## Bedienung
+## Usage
 
-1. Ein Git-Repository öffnen und links in der Activity Bar **Branch Changes** auswählen.
-2. Über **Select Target Branch** den Vergleichsbranch wählen, zum Beispiel `origin/main`.
-3. Eine geänderte Datei anklicken, um den nativen, schreibgeschützten Diff zu öffnen.
+1. Open a Git repository and select **Branch Changes** in the Activity Bar.
+2. Use **Select Target Branch** to choose the branch to compare against, such as `origin/main`.
+3. Click a changed file to open the native, read-only diff editor.
 
-- **Vollständiger Baum:** Committete Dateien und Ordner bleiben als Kontext sichtbar;
-  unveränderte Pfade sind blass. Dateityp-Icons stammen aus dem aktiven Theme,
-  farbige Status-Badges kennzeichnen Änderungen.
-- **Show Changes Only / Show All Files:** Zwischen Nettoänderungen und vollständigem
-  Kontext umschalten.
-- **Show Ignored Files / Hide Ignored Files:** Im vollständigen Baum zusätzlich
-  ignorierte lokale Dateien ein-/ausblenden. Ohne diese Option gelten die
-  Git-Ignore-Regeln einschließlich globaler Excludes.
-- **Lokaler Kontext:** Nicht committete Zusatzdateien sind ausdrücklich mit `local`
-  bzw. `ignored · local` gekennzeichnet. Sie öffnen die lokale Datei und fließen
-  niemals in den Branch-Diff oder Änderungszähler ein.
-- **Refresh:** Die Ansicht aktualisiert sich bei Git-Änderungen automatisch.
-  Für ignorierte lokale Dateien gegebenenfalls manuell aktualisieren.
-- **Select Repository:** Bei mehreren geöffneten Repositories den Vergleich wechseln.
+- **Full tree:** Committed files and folders remain visible for context; unchanged
+  paths are dimmed. File-type icons follow your active theme, and colored status
+  badges identify changes.
+- **Show Changes Only / Show All Files:** Switch between net changes and the full tree.
+- **Show Ignored Files / Hide Ignored Files:** Include or hide ignored local files
+  in the full tree. When hidden, Git's ignore rules apply, including global excludes.
+- **Local context:** Additional, uncommitted files are explicitly labeled `local`
+  or `ignored · local`. They open the actual local file and never contribute to
+  the branch diff or change count.
+- **Refresh:** The view refreshes automatically when Git state changes.
+  Refresh manually for ignored local files when needed.
+- **Select Repository:** Switch repositories when more than one is open.
 
-Ansichtsoptionen und eigene Auf-/Zuklappentscheidungen werden gespeichert.
-Neue Ordner sind zunächst offen, wenn sie committete Änderungen enthalten,
-andernfalls geschlossen. Eigene Entscheidungen haben Vorrang.
-Ein Refresh schließt oder ersetzt keine Editor-Tabs. Historische Inhalte bleiben
-an ihren ursprünglichen Commit gebunden; ein erneuter Klick öffnet den neuen Stand.
-Für einzelne Klicks gilt weiterhin VS Codes normales Vorschau-Tab-Verhalten.
+View options and your folder expansion choices are saved. New folders start
+expanded if they contain committed changes, and collapsed otherwise. Your explicit
+choices take precedence. Refreshing does not close or replace editor tabs.
+Historical content stays bound to its original commit; clicking a file again
+opens the current snapshot. Single clicks still use VS Code's normal preview-tab
+behavior.
 
-## Vergleich und Grenzen
+## Comparison and limitations
 
-Der Vergleich entspricht `git diff <zielbranch>...HEAD`: gemeinsamer Vorfahr
-von Zielbranch und aktuellem Branch gegen den aktuellen Commit.
+The comparison is equivalent to `git diff <target-branch>...HEAD`: the common
+ancestor of the target and current branch compared with the current commit.
 
-- **Nur committete Änderungen:** Staging Area und Arbeitskopie beeinflussen den
-  Diff nicht. Committete Einträge haben Vorrang vor lokalem Dateikontext.
-- Umbenennungen werden von Git erkannt. Neue, gelöschte und umbenannte Dateien
-  erscheinen zusammen mit allen anderen Nettoänderungen im selben Baum.
-- Getrackte Dateien bleiben trotz Ignore-Regeln sichtbar. Git-Metadaten und lokale
-  Inhalte eingebetteter Repositories/Submodule werden nicht durchlaufen.
-- Symlinks zeigen den gespeicherten Linkpfad, Submodule ihre Commit-ID.
-  Reine Dateimodus-Änderungen werden beim Öffnen erläutert.
-- Binärdateien werden aufgelistet, aber nicht als Text-Diff geöffnet.
-  Textinhalte werden als UTF-8 gelesen.
-- Die Erweiterung führt kein Fetch, Checkout oder Merge aus und schreibt nicht
-  in dein Repository. Remote-Tracking-Branches bei Bedarf selbst aktualisieren.
-- Fehlende oder uneindeutige Historie wird als Fehler gemeldet. Bei einem
-  Refresh-Fehler bleibt die letzte erfolgreiche Ansicht erhalten.
-- Git-Aufrufe sind auf 15 Sekunden und 32 MiB Ausgabe begrenzt. Sehr große
-  ignorierte Verzeichnisse können diese Grenze erreichen; dann bleibt der
-  committete Baum ohne zusätzlichen lokalen Kontext verfügbar.
-- Bisher praktisch unter macOS geprüft; Windows und Linux sind noch nicht verifiziert.
+- **Committed changes only:** The staging area and working tree do not affect
+  the diff. Committed entries take precedence over local file context.
+- Git detects renames. Added, deleted, and renamed files appear alongside all
+  other net changes in the same tree.
+- Tracked files remain visible even when they match ignore rules. Git metadata
+  and local contents of nested repositories or submodules are not traversed.
+- Symbolic links display their stored link target; submodules display their
+  commit ID. File-mode-only changes are explained when opened.
+- Binary files are listed but cannot be opened as text diffs.
+  Text content is read as UTF-8.
+- The extension does not fetch, check out, merge, or write to your repository.
+  Update remote-tracking branches yourself when needed.
+- Missing or ambiguous history is reported as an error. If a refresh fails,
+  the last successful view remains available.
+- Git commands are limited to 15 seconds and 32 MiB of output. Very large ignored
+  directories can reach these limits; the committed tree remains available
+  without the additional local context in that case.
+- Tested on macOS so far; Windows and Linux have not yet been verified.
 
-## Entwicklung
+## Development
 
-Node.js ab 18 und Git genügen für die Tests; es gibt keine Projektabhängigkeiten:
+Node.js 18 or later and Git are sufficient to run the tests. There are no project
+dependencies to install:
 
 ```sh
 npm run check
 npm test
 ```
 
-Zum Ausprobieren den Projektordner in VS Code öffnen und **Run → Run Without
-Debugging** mit der Konfiguration **Run Branch Changes** starten. Im neuen
-Extension-Development-Host das gewünschte Git-Repository öffnen.
+To try the extension, open the project folder in VS Code and select **Run → Run
+Without Debugging** with the **Run Branch Changes** configuration. Open your
+Git repository in the new Extension Development Host window.
 
-Mit `code` im `PATH` führt `npm run test:vscode` zusätzlich einen Hosttest mit
-nativen Diffs aus. Er öffnet ein temporäres Test-Repository mit separatem Profil;
-vorhandene VS-Code-Einstellungen bleiben unverändert. Nur in diesem isolierten
-Testprozess wird die Workspace-Trust-Abfrage für das selbst erzeugte Fixture deaktiviert.
+With `code` on your `PATH`, `npm run test:vscode` also runs a host test with native
+diffs. It opens a temporary test repository with a separate profile, leaving your
+existing VS Code settings untouched. Only this isolated test process disables
+the Workspace Trust prompt for its generated test fixture.
 
-### VSIX erstellen
+### Build a VSIX
 
-Mit einer vom aktuellen `vsce` unterstützten Node.js-Version im Projektordner:
+Use a Node.js version supported by the current `vsce` release and run this command
+in the project folder:
 
 ```sh
 npx @vscode/vsce package --no-dependencies
 ```
 
-`npx` lädt bei Bedarf das Packaging-Werkzeug herunter. Der Befehl veröffentlicht
-nichts und erzeugt `branch-changes-0.1.0.vsix`. Das Paket enthält nur die
-Runtime-Dateien, das Activity-Bar-Icon, die Paketbeschreibung und diese README.
-Für eine neue Release zuerst die Versionsnummer in `package.json` erhöhen und
-die erzeugte VSIX als Release-Asset anhängen.
+`npx` downloads the packaging tool if necessary. This command does not publish
+anything; it creates `branch-changes-0.1.1.vsix`. The package includes only the
+runtime files, Activity Bar icon, package manifest, and this README.
+For a new release, first increment the version in `package.json`, then attach
+the generated VSIX as a release asset.

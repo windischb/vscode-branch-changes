@@ -2,7 +2,7 @@
   "name": "branch-changes",
   "displayName": "Branch Changes",
   "description": "See the final, combined changes of your Git branch in one file tree.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "windischb",
   "private": true,
   "repository": {
